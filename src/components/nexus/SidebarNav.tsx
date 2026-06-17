@@ -2,9 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import {
-  Zap, Database, Settings, ChevronLeft, ChevronRight, Plus,
+  Zap, Database, Settings, ChevronRight, Plus,
   FolderPlus, FolderOpen, ChevronDown, MoreVertical, Briefcase, Map as MapIcon, Bookmark, Radio,
-  FolderOpen as CollectionIcon, Archive, LayoutDashboard, Users, ImageOff, Activity, Tags, Download,
+  FolderOpen as CollectionIcon, Archive,
 } from "lucide-react";
 
 import { useSessionContext, type SessionListItem } from "@/contexts/SessionContext";
