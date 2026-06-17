@@ -89,7 +89,11 @@ const StatusChip = ({ label, value, tone = "default", icon, onClick, title, coll
 export default function StatusChips() {
   const stats = useTopbarStats();
   const navigate = useNavigate();
+  const { isAdmin } = useSessionContext();
+  const { hasAccess: hasConsultantAccess } = useConsultantAccess();
+  const showOpsChips = isAdmin || hasConsultantAccess;
   const [narrow, setNarrow] = useState(false);
+
   const prm =
     typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
