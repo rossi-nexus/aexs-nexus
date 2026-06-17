@@ -4,15 +4,17 @@ type Variant = "login" | "hero" | "empty" | "pipeline";
 
 const VARIANTS: Record<
   Variant,
-  { url: string; opacity: number; vignette?: string; pos: string }
+  { url: string; opacity: number; vignette?: string; pos: string; size?: string }
 > = {
   login: {
     url: "/atmosphere/bg-login.jpg",
     opacity: 0.7,
-    // Only a soft edge vignette — no flat dark overlay
+    // Contain so the whole coastal scene (sky, terrain, radom, sea) is visible
+    // and the radom doesn't dominate the frame.
+    size: "contain",
     vignette:
       "radial-gradient(ellipse at center, transparent 35%, hsl(240 20% 4% / 0.25) 75%, hsl(240 20% 4% / 0.55) 100%)",
-    pos: "left center",
+    pos: "center center",
   },
   hero: {
     url: "/atmosphere/bg-hero.jpg",
@@ -55,10 +57,11 @@ const AtmosphereLayer = ({ variant, className, enabled = true, children }: Props
         <>
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 -z-10 bg-no-repeat bg-cover"
+            className="pointer-events-none absolute inset-0 -z-10 bg-no-repeat"
             style={{
               backgroundImage: `url("${cfg.url}")`,
               backgroundPosition: cfg.pos,
+              backgroundSize: cfg.size ?? "cover",
               backgroundAttachment: "fixed",
               opacity: cfg.opacity,
             }}

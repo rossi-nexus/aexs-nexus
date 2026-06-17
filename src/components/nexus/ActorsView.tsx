@@ -305,21 +305,60 @@ const ActorsView = ({ initialTab = "database" }: { initialTab?: TabKey } = {}) =
       ? new Set(filteredCollection.map((a) => a.source_session_id).filter(Boolean)).size
       : 0;
 
+  const SUB_VIEWS: { key: TabKey | "map"; label: string; to: string }[] = [
+    { key: "collection", label: "My Collection", to: "/actors/collection" },
+    { key: "database", label: "Database", to: "/actors/database" },
+    ...(isAdmin
+      ? [{ key: "archived" as const, label: "Archived", to: "/actors/archived" }]
+      : []),
+    { key: "map", label: "Map", to: "/actors/map" },
+  ];
+  const activeSubLabel = SUB_VIEWS.find((v) => v.key === tab)?.label ?? "Database";
+
   return (
     <div className="h-full overflow-y-auto bg-background">
       <div className="max-w-5xl mx-auto px-8 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-semibold text-foreground">Actors</h1>
+        <div className="flex items-start justify-between mb-4 gap-4">
+          <div className="min-w-0">
+            <div className="text-[11px] uppercase tracking-[0.18em] text-foreground-muted mb-1">
+              Actors / {activeSubLabel}
+            </div>
+            <h1 className="text-2xl font-semibold text-foreground">Actors</h1>
+          </div>
           <Button
             size="sm"
             variant="default"
             onClick={() => navigate("/actors/new")}
-            className="h-8"
+            className="h-8 shrink-0"
           >
             <Plus className="w-3.5 h-3.5 mr-1" />
             Add actor
           </Button>
         </div>
+
+        {/* In-page sub-view tabs — mirrors sidebar IA */}
+        <div className="flex items-center gap-1 border-b border-border mb-6 -mx-1 px-1 overflow-x-auto">
+          {SUB_VIEWS.map((v) => {
+            const active = v.key === tab;
+            return (
+              <button
+                key={v.key}
+                onClick={() => navigate(v.to)}
+                className={cn(
+                  "relative px-3 py-2 text-xs font-medium whitespace-nowrap transition-colors",
+                  "after:absolute after:left-2 after:right-2 after:-bottom-px after:h-[2px] after:rounded-t",
+                  active
+                    ? "text-foreground after:bg-accent-teal"
+                    : "text-foreground-secondary hover:text-foreground after:bg-transparent",
+                )}
+              >
+                {v.label}
+              </button>
+            );
+          })}
+        </div>
+
+
 
 
         {/* Search + Filters */}
