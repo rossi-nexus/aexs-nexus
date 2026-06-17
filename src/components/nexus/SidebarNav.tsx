@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import {
   Zap, Database, Settings, ChevronLeft, ChevronRight, Plus,
   FolderPlus, FolderOpen, ChevronDown, MoreVertical, Briefcase, Map as MapIcon, Bookmark, Radio,
-  FolderOpen as CollectionIcon, Archive, LayoutDashboard, Users, ImageOff, Activity, Tags, Download,
+  FolderOpen as CollectionIcon, Archive,
 } from "lucide-react";
 
 import { useSessionContext, type SessionListItem } from "@/contexts/SessionContext";
@@ -293,35 +293,9 @@ const SidebarNav = () => {
                   </div>
                 )}
 
-                {/* Admin sub-items */}
-                {item.to === "/admin" && (
-                  <div className="mt-1 space-y-0.5">
-                    {[
-                      { to: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-                      { to: "/admin/users", icon: Users, label: "Users" },
-                      { to: "/admin/ontology", icon: Tags, label: "Ontology" },
-                      { to: "/admin/registry-import", icon: Download, label: "Registry import" },
-                      { to: "/admin/orphan-media", icon: ImageOff, label: "Orphan media" },
-                      { to: "/admin/interactions", icon: Activity, label: "Interactions" },
-                    ].map((s) => (
-                      <NavLink
-                        key={s.to}
-                        to={s.to}
-                        className={({ isActive }) =>
-                          cn(
-                            "flex items-center gap-2 ml-6 px-2 py-1.5 rounded text-xs transition-colors",
-                            isActive
-                              ? "bg-surface text-foreground font-semibold"
-                              : "text-foreground-secondary hover:bg-surface/50"
-                          )
-                        }
-                      >
-                        <s.icon className="w-3 h-3 shrink-0" />
-                        <span>{s.label}</span>
-                      </NavLink>
-                    ))}
-                  </div>
-                )}
+                {/* Admin has its own dedicated layout + sidebar — no sub-items here. */}
+
+
 
 
                 {/* Programmes + Sessions appear under Pipeline */}
