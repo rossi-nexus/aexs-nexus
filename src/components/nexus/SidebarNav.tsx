@@ -4,7 +4,9 @@ import { toast } from "sonner";
 import {
   Zap, Database, Settings, ChevronLeft, ChevronRight, Plus,
   FolderPlus, FolderOpen, ChevronDown, MoreVertical, Briefcase, Map as MapIcon, Bookmark, Radio,
+  FolderOpen as CollectionIcon, Archive, LayoutDashboard, Users, ImageOff, Activity, Tags, Download,
 } from "lucide-react";
+
 import { useSessionContext, type SessionListItem } from "@/contexts/SessionContext";
 import { useProgrammeList } from "@/hooks/useProgramme";
 import { useConsultantAccess } from "@/hooks/useConsultantAccess";
