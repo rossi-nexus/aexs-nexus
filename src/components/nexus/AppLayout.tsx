@@ -38,8 +38,12 @@ const AppLayout = () => {
               <Route path="/" element={<Navigate to="/pipeline" replace />} />
               <Route path="/pipeline" element={<PipelineView />} />
               <Route path="/actors" element={<ActorsView />} />
+              <Route path="/actors/collection" element={<ActorsView initialTab="collection" />} />
+              <Route path="/actors/database" element={<ActorsView initialTab="database" />} />
+              <Route path="/actors/archived" element={<ActorsView initialTab="archived" />} />
               <Route path="/actors/new" element={<AddActorPage />} />
               <Route path="/actors/map" element={<ActorsMapPage />} />
+
               <Route path="/actors/:actorId/products/:productSlug" element={<ProductDetailPage />} />
               <Route path="/actors/:id" element={<ActorProfile />} />
               <Route path="/intelligence" element={<IntelligencePage />} />

@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { AlertTriangle, ShieldCheck, ListChecks, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTopbarStats } from "@/hooks/useTopbarStats";
+import { useSessionContext } from "@/contexts/SessionContext";
+import { useConsultantAccess } from "@/hooks/useConsultantAccess";
+
 
 type Tone = "default" | "warning";
 
@@ -86,7 +89,11 @@ const StatusChip = ({ label, value, tone = "default", icon, onClick, title, coll
 export default function StatusChips() {
   const stats = useTopbarStats();
   const navigate = useNavigate();
+  const { isAdmin } = useSessionContext();
+  const { hasAccess: hasConsultantAccess } = useConsultantAccess();
+  const showOpsChips = isAdmin || hasConsultantAccess;
   const [narrow, setNarrow] = useState(false);
+
   const prm =
     typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -115,7 +122,7 @@ export default function StatusChips() {
           collapse={narrow}
         />
       )}
-      {verified !== null && (
+      {showOpsChips && verified !== null && (
         <StatusChip
           label="Verified"
           value={String(verified)}
@@ -124,7 +131,7 @@ export default function StatusChips() {
           collapse={narrow}
         />
       )}
-      {pending !== null && (
+      {showOpsChips && pending !== null && (
         <StatusChip
           label="Pending"
           value={String(pending)}
@@ -133,7 +140,7 @@ export default function StatusChips() {
           collapse={narrow}
         />
       )}
-      {decay !== null && (
+      {showOpsChips && decay !== null && (
         <StatusChip
           label="Decay <30d"
           value={String(decay)}
@@ -146,3 +153,4 @@ export default function StatusChips() {
     </div>
   );
 }
+
