@@ -1,15 +1,14 @@
 import { useNavigate } from "react-router-dom";
-import AtmosphereLayer from "@/components/nexus/AtmosphereLayer";
 import { Button } from "@/components/ui/button";
 
-const CONTACT_EMAIL = "[CONTACT_EMAIL]";
+const CONTACT_EMAIL = "contact@test.aexs.no";
 
 const LandingPage = () => {
   const navigate = useNavigate();
 
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-background">
-      {/* Background image */}
+      {/* Background image — vessel in fog, clearly visible */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
@@ -17,16 +16,16 @@ const LandingPage = () => {
           backgroundImage: 'url("/atmosphere/bg-hero.jpg")',
           backgroundSize: "cover",
           backgroundPosition: "center",
-          opacity: 0.35,
+          opacity: 0.7,
         }}
       />
-      {/* Vignette: darker top/bottom, clearer middle */}
+      {/* Soft edge vignette only — no flat overlay */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage:
-            "linear-gradient(180deg, hsl(240 20% 4% / 0.92) 0%, hsl(240 20% 4% / 0.55) 45%, hsl(240 20% 4% / 0.55) 55%, hsl(240 20% 4% / 0.95) 100%)",
+            "linear-gradient(180deg, hsl(240 20% 4% / 0.55) 0%, transparent 25%, transparent 70%, hsl(240 20% 4% / 0.7) 100%)",
         }}
       />
 
@@ -36,10 +35,10 @@ const LandingPage = () => {
           <p className="mb-6 text-label uppercase tracking-[0.2em] text-foreground-muted">
             ÆXS · NEXUS
           </p>
-          <h1 className="bg-gradient-to-r from-[#4A7AB5] via-[#4FADA0] to-[#4DAF6F] bg-clip-text text-4xl font-semibold leading-tight text-transparent sm:text-5xl md:text-6xl">
+          <h1 className="bg-gradient-to-r from-[#4A7AB5] via-[#4FADA0] to-[#4DAF6F] bg-clip-text text-4xl font-semibold leading-tight text-transparent sm:text-5xl md:text-6xl drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">
             Enable Access. Leverage Excess.
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-body text-foreground-muted">
+          <p className="mx-auto mt-6 max-w-2xl text-body text-foreground drop-shadow-[0_1px_6px_rgba(0,0,0,0.7)]">
             Discovery and verification for security, defence, preparedness, and
             critical-infrastructure procurement.
           </p>
@@ -68,7 +67,7 @@ const LandingPage = () => {
 
       {/* Footer */}
       <footer className="absolute inset-x-0 bottom-0 z-10 px-6 pb-5 text-center">
-        <p className="text-[11px] uppercase tracking-[0.15em] text-foreground-muted/60">
+        <p className="text-[11px] uppercase tracking-[0.15em] text-foreground-muted/80">
           ÆXS · {CONTACT_EMAIL} · Restricted access — pilot evaluation by invitation
         </p>
       </footer>

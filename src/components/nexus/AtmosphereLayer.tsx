@@ -1,27 +1,38 @@
 import { cn } from "@/lib/utils";
 
-type Variant = "login" | "empty" | "pipeline";
+type Variant = "login" | "hero" | "empty" | "pipeline";
 
-const VARIANTS: Record<Variant, { url: string; opacity: number; overlay: string; pos: string }> = {
+const VARIANTS: Record<
+  Variant,
+  { url: string; opacity: number; vignette?: string; pos: string }
+> = {
   login: {
     url: "/atmosphere/bg-login.jpg",
-    opacity: 0.35,
-    overlay:
-      "linear-gradient(180deg, hsl(240 20% 4% / 0.75) 0%, hsl(240 20% 4% / 0.86) 50%, hsl(240 20% 4% / 0.92) 100%)",
+    opacity: 0.7,
+    // Only a soft edge vignette — no flat dark overlay
+    vignette:
+      "radial-gradient(ellipse at center, transparent 35%, hsl(240 20% 4% / 0.25) 75%, hsl(240 20% 4% / 0.55) 100%)",
+    pos: "left center",
+  },
+  hero: {
+    url: "/atmosphere/bg-hero.jpg",
+    opacity: 0.65,
+    vignette:
+      "radial-gradient(ellipse at center, transparent 40%, hsl(240 20% 4% / 0.28) 78%, hsl(240 20% 4% / 0.6) 100%)",
     pos: "center center",
   },
   empty: {
     url: "/atmosphere/bg-empty.jpg",
-    opacity: 0.16,
-    overlay:
-      "linear-gradient(180deg, hsl(240 20% 4% / 0.98) 0%, hsl(240 20% 4% / 0.92) 35%, hsl(240 20% 4% / 0.55) 100%)",
+    opacity: 0.4,
+    vignette:
+      "linear-gradient(180deg, hsl(240 20% 4% / 0.45) 0%, transparent 25%, transparent 70%, hsl(240 20% 4% / 0.55) 100%)",
     pos: "center bottom",
   },
   pipeline: {
     url: "/atmosphere/bg-empty.jpg",
-    opacity: 0.07,
-    overlay:
-      "radial-gradient(ellipse at center, hsl(240 20% 4% / 0.72) 0%, hsl(240 20% 4% / 0.92) 60%, hsl(240 20% 4% / 0.98) 100%)",
+    opacity: 0.25,
+    vignette:
+      "linear-gradient(180deg, hsl(240 20% 4% / 0.35) 0%, transparent 20%, transparent 75%, hsl(240 20% 4% / 0.45) 100%)",
     pos: "center bottom",
   },
 };
@@ -52,11 +63,13 @@ const AtmosphereLayer = ({ variant, className, enabled = true, children }: Props
               opacity: cfg.opacity,
             }}
           />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 -z-10"
-            style={{ backgroundImage: cfg.overlay }}
-          />
+          {cfg.vignette && (
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 -z-10"
+              style={{ backgroundImage: cfg.vignette }}
+            />
+          )}
         </>
       )}
       {children}
