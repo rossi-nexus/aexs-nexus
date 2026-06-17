@@ -1,8 +1,9 @@
 import { lazy, Suspense } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AUTH_BYPASS_ACTIVE } from "@/lib/devAuthBypass";
 import LoginPage from "@/components/nexus/LoginPage";
+import LandingPage from "@/pages/LandingPage";
 
 // Route-level code splitting: each layout (and everything it imports) becomes
 // its own chunk, so e.g. admin/consultant code never loads for regular users.
@@ -18,6 +19,7 @@ const RouteFallback = () => (
 
 const Index = () => {
   const { user, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -27,7 +29,19 @@ const Index = () => {
     );
   }
 
-  if (!AUTH_BYPASS_ACTIVE && !user) return <LoginPage />;
+  const isAuthed = AUTH_BYPASS_ACTIVE || !!user;
+
+  // Public routes
+  if (!isAuthed) {
+    if (location.pathname === "/login") return <LoginPage />;
+    if (location.pathname === "/") return <LandingPage />;
+    return <Navigate to="/" replace />;
+  }
+
+  // Authed: / and /login redirect to pipeline
+  if (location.pathname === "/" || location.pathname === "/login") {
+    return <Navigate to="/pipeline" replace />;
+  }
 
   return (
     <Suspense fallback={<RouteFallback />}>
