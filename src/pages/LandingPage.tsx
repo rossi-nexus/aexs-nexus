@@ -28,6 +28,16 @@ const LandingPage = () => {
             "linear-gradient(180deg, hsl(240 20% 4% / 0.55) 0%, transparent 25%, transparent 70%, hsl(240 20% 4% / 0.7) 100%)",
         }}
       />
+      {/* Full-width horizontal dark band behind the hero text block */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2"
+        style={{
+          height: "440px",
+          background:
+            "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.0) 30%, rgba(0,0,0,0.55) 42%, rgba(0,0,0,0.55) 58%, rgba(0,0,0,0.0) 70%, transparent 100%)",
+        }}
+      />
 
       {/* Content */}
       <main className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center">
