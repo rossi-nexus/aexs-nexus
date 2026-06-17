@@ -33,7 +33,7 @@ const LandingPage = () => {
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2"
         style={{
-          height: "540px",
+          height: "400px",
           background: "rgba(0,0,0,0.55)",
         }}
       />
