@@ -33,9 +33,8 @@ const LandingPage = () => {
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2"
         style={{
-          height: "440px",
-          background:
-            "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.0) 30%, rgba(0,0,0,0.55) 42%, rgba(0,0,0,0.55) 58%, rgba(0,0,0,0.0) 70%, transparent 100%)",
+          height: "540px",
+          background: "rgba(0,0,0,0.55)",
         }}
       />
 
