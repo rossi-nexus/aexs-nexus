@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { AlertTriangle, ShieldCheck, ListChecks, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTopbarStats } from "@/hooks/useTopbarStats";
+import { useSessionContext } from "@/contexts/SessionContext";
+import { useConsultantAccess } from "@/hooks/useConsultantAccess";
+
 
 type Tone = "default" | "warning";
 
