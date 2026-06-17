@@ -72,15 +72,19 @@ function arrayLen(v: unknown): number {
   return Array.isArray(v) ? v.length : 0;
 }
 
-const ActorsView = () => {
+const ActorsView = ({ initialTab = "database" }: { initialTab?: TabKey } = {}) => {
   const { user } = useAuth();
   const { isAdmin } = useSessionContext();
   const navigate = useNavigate();
 
-  const [tab, setTab] = useState<TabKey>("database");
+  const [tab, setTab] = useState<TabKey>(initialTab);
   const [loading, setLoading] = useState(true);
-  const [collectionView, setCollectionView] = useState<"list" | "map">("list");
   const collectionMap = useCollectionMap();
+
+  useEffect(() => {
+    setTab(initialTab);
+  }, [initialTab]);
+
 
   const [personal, setPersonal] = useState<PersonalActor[]>([]);
   const [dbActors, setDbActors] = useState<DbActor[]>([]);
