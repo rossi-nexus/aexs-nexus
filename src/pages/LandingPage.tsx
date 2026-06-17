@@ -32,24 +32,13 @@ const LandingPage = () => {
       {/* Content */}
       <main className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center">
         <div className="relative max-w-3xl">
-          {/* Soft dark pool behind the text block — improves contrast, lets the
-              ship's hull markings recede into shadow while keeping the edges of
-              the image bright. */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[480px] w-[820px] max-w-[95vw] -translate-x-1/2 -translate-y-1/2"
-            style={{
-              backgroundImage:
-                "radial-gradient(ellipse at center, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.45) 40%, rgba(0,0,0,0.18) 70%, transparent 100%)",
-            }}
-          />
           <p className="mb-6 text-label uppercase tracking-[0.2em] text-foreground-muted">
             ÆXS · NEXUS
           </p>
-          <h1 className="bg-gradient-to-r from-[#4A7AB5] via-[#4FADA0] to-[#4DAF6F] bg-clip-text text-4xl font-semibold leading-tight text-transparent sm:text-5xl md:text-6xl [text-shadow:0_1px_4px_rgba(0,0,0,0.35)]">
+          <h1 className="bg-gradient-to-r from-[#4A7AB5] via-[#4FADA0] to-[#4DAF6F] bg-clip-text text-4xl font-semibold leading-tight text-transparent sm:text-5xl md:text-6xl">
             Enable Access. Leverage Excess.
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-body text-foreground [text-shadow:0_1px_3px_rgba(0,0,0,0.5)]">
+          <p className="mx-auto mt-6 max-w-2xl text-body text-foreground">
             Discovery and verification for security, defence, preparedness, and
             critical-infrastructure procurement.
           </p>
