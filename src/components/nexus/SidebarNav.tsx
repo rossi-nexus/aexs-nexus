@@ -265,23 +265,64 @@ const SidebarNav = () => {
                   <span>{item.label}</span>
                 </NavLink>
 
-                {/* Map sub-entry under Actors */}
+                {/* Actors sub-items */}
                 {item.to === "/actors" && (
-                  <NavLink
-                    to="/actors/map"
-                    className={({ isActive }) =>
-                      cn(
-                        "flex items-center gap-2 ml-6 mt-1 px-2 py-1.5 rounded text-xs transition-colors",
-                        isActive
-                          ? "bg-surface text-foreground font-semibold"
-                          : "text-foreground-secondary hover:bg-surface/50"
-                      )
-                    }
-                  >
-                    <MapIcon className="w-3 h-3 shrink-0" />
-                    <span>Map</span>
-                  </NavLink>
+                  <div className="mt-1 space-y-0.5">
+                    {[
+                      { to: "/actors/collection", icon: CollectionIcon, label: "My Collection" },
+                      { to: "/actors/database", icon: Database, label: "Database" },
+                      ...(isAdmin ? [{ to: "/actors/archived", icon: Archive, label: "Archived" }] : []),
+                      { to: "/actors/map", icon: MapIcon, label: "Map" },
+                    ].map((s) => (
+                      <NavLink
+                        key={s.to}
+                        to={s.to}
+                        className={({ isActive }) =>
+                          cn(
+                            "flex items-center gap-2 ml-6 px-2 py-1.5 rounded text-xs transition-colors",
+                            isActive
+                              ? "bg-surface text-foreground font-semibold"
+                              : "text-foreground-secondary hover:bg-surface/50"
+                          )
+                        }
+                      >
+                        <s.icon className="w-3 h-3 shrink-0" />
+                        <span>{s.label}</span>
+                      </NavLink>
+                    ))}
+                  </div>
                 )}
+
+                {/* Admin sub-items */}
+                {item.to === "/admin" && (
+                  <div className="mt-1 space-y-0.5">
+                    {[
+                      { to: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+                      { to: "/admin/users", icon: Users, label: "Users" },
+                      { to: "/admin/ontology", icon: Tags, label: "Ontology" },
+                      { to: "/admin/registry-import", icon: Download, label: "Registry import" },
+                      { to: "/admin/orphan-media", icon: ImageOff, label: "Orphan media" },
+                      { to: "/admin/interactions", icon: Activity, label: "Interactions" },
+                    ].map((s) => (
+                      <NavLink
+                        key={s.to}
+                        to={s.to}
+                        className={({ isActive }) =>
+                          cn(
+                            "flex items-center gap-2 ml-6 px-2 py-1.5 rounded text-xs transition-colors",
+                            isActive
+                              ? "bg-surface text-foreground font-semibold"
+                              : "text-foreground-secondary hover:bg-surface/50"
+                          )
+                        }
+                      >
+                        <s.icon className="w-3 h-3 shrink-0" />
+                        <span>{s.label}</span>
+                      </NavLink>
+                    ))}
+                  </div>
+                )}
+
 
                 {/* Programmes + Sessions appear under Pipeline */}
                 {item.to === "/pipeline" && (
