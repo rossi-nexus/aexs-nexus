@@ -310,64 +310,17 @@ const ActorsView = ({ initialTab = "database" }: { initialTab?: TabKey } = {}) =
       <div className="max-w-5xl mx-auto px-8 py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-semibold text-foreground">Actors</h1>
-          <div className="flex items-center gap-2">
-            <Button
-              size="sm"
-              variant="default"
-              onClick={() => navigate("/actors/new")}
-              className="h-8"
-            >
-              <Plus className="w-3.5 h-3.5 mr-1" />
-              Add actor
-            </Button>
-            <div className="inline-flex rounded-md border border-border overflow-hidden">
-            <button
-              onClick={() => tab === "collection" && setCollectionView("list")}
-              className={cn(
-                "px-3 py-1.5 text-xs font-medium flex items-center gap-1.5 transition-colors",
-                (tab !== "collection" || collectionView === "list")
-                  ? "bg-surface text-foreground"
-                  : "text-foreground-secondary hover:bg-surface/60",
-              )}
-              title="List view"
-            >
-              <ListIcon className="w-3.5 h-3.5" />
-              List
-            </button>
-            <button
-              onClick={() => tab === "collection" ? setCollectionView("map") : navigate("/actors/map")}
-              className={cn(
-                "px-3 py-1.5 text-xs font-medium border-l border-border flex items-center gap-1.5 transition-colors",
-                tab === "collection" && collectionView === "map"
-                  ? "bg-surface text-foreground"
-                  : "text-foreground-secondary hover:bg-surface/60",
-              )}
-              title="Map view"
-            >
-              <MapIcon className="w-3.5 h-3.5" />
-              Map
-            </button>
-            </div>
-          </div>
+          <Button
+            size="sm"
+            variant="default"
+            onClick={() => navigate("/actors/new")}
+            className="h-8"
+          >
+            <Plus className="w-3.5 h-3.5 mr-1" />
+            Add actor
+          </Button>
         </div>
 
-
-
-        {/* Tabs — pill idiom (VR-02) */}
-        <div className="flex items-center gap-1.5 mb-6">
-          <TabButton active={tab === "collection"} onClick={() => setTab("collection")}>
-            My Collection
-          </TabButton>
-          <TabButton active={tab === "database"} onClick={() => setTab("database")}>
-            Database
-          </TabButton>
-          {isAdmin && (
-            <TabButton active={tab === "archived"} onClick={() => setTab("archived")}>
-              Archived
-            </TabButton>
-          )}
-          {/* Phase 6.5.5b: validation queue tab removed — superseded by /consultant/verification */}
-        </div>
 
         {/* Search + Filters */}
         <div className="space-y-3 mb-4">
