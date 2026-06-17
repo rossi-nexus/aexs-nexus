@@ -122,7 +122,7 @@ export default function StatusChips() {
           collapse={narrow}
         />
       )}
-      {verified !== null && (
+      {showOpsChips && verified !== null && (
         <StatusChip
           label="Verified"
           value={String(verified)}
@@ -131,7 +131,7 @@ export default function StatusChips() {
           collapse={narrow}
         />
       )}
-      {pending !== null && (
+      {showOpsChips && pending !== null && (
         <StatusChip
           label="Pending"
           value={String(pending)}
@@ -140,7 +140,7 @@ export default function StatusChips() {
           collapse={narrow}
         />
       )}
-      {decay !== null && (
+      {showOpsChips && decay !== null && (
         <StatusChip
           label="Decay <30d"
           value={String(decay)}
@@ -153,3 +153,4 @@ export default function StatusChips() {
     </div>
   );
 }
+
