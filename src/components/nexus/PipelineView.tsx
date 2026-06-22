@@ -515,6 +515,7 @@ const AxisSidebarConnected = ({
   clarificationPoints,
   applyAxisChange,
   unlockStepA2,
+  onCollapse,
 }: AxisSidebarConnectedProps) => {
   const [gate, setGate] = useState<LockGate | null>(null);
 
