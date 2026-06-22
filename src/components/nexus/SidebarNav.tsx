@@ -226,14 +226,37 @@ const SidebarNav = () => {
 
   if (!expanded) {
     return (
-      <aside className="h-full w-8 bg-elevated border-r border-border flex flex-col shrink-0">
+      <aside className="h-full w-12 bg-elevated border-r border-border flex flex-col shrink-0">
         <button
           onClick={() => setExpanded(true)}
-          className="h-10 flex items-center justify-center bg-surface/40 text-foreground-secondary hover:bg-surface hover:text-foreground transition-colors"
+          className="h-10 flex items-center justify-center bg-surface/40 text-foreground-secondary hover:bg-surface hover:text-foreground transition-colors border-b border-border"
           title="Expand sidebar"
         >
           <ChevronRight className="w-4 h-4" />
         </button>
+        <nav className="flex-1 overflow-y-auto py-2 flex flex-col items-center gap-1">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.to === "/actors"}
+                title={item.label}
+                className={({ isActive }) =>
+                  cn(
+                    "w-9 h-9 flex items-center justify-center rounded-md transition-colors",
+                    isActive
+                      ? "bg-surface text-foreground"
+                      : "text-foreground-secondary hover:bg-surface/60 hover:text-foreground"
+                  )
+                }
+              >
+                <Icon className="w-4 h-4" />
+              </NavLink>
+            );
+          })}
+        </nav>
       </aside>
     );
   }
