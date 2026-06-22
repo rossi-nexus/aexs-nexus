@@ -125,6 +125,15 @@ const AxisSidebar = ({
             ) : null}
           </span>
         </div>
+        {onCollapse && (
+          <button
+            onClick={onCollapse}
+            title="Collapse Axis"
+            className="shrink-0 w-7 h-7 rounded flex items-center justify-center text-foreground-muted hover:text-foreground hover:bg-surface transition-colors"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        )}
       </div>
 
       {/* Step tabs */}
