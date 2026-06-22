@@ -59,6 +59,7 @@ const AxisSidebar = ({
   onApplyPending,
   onRevertChange,
   onFreeChat,
+  onCollapse,
 }: AxisSidebarProps) => {
   const [chatText, setChatText] = useState("");
   const [chatBusy, setChatBusy] = useState(false);
