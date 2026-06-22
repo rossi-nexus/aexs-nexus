@@ -65,6 +65,28 @@ const PipelineInner = ({ sessionId, programmeId, refreshSessions }: PipelineInne
   const axis = useAxis({ sessionId });
   const [showExamples, setShowExamples] = useState(false);
 
+  // UI batch 02c: Axis sidebar collapsed by default; persist user choice.
+  const LS_KEY_AXIS = "nexus.sidebar.axis.expanded";
+  const [axisExpanded, setAxisExpanded] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem(LS_KEY_AXIS) === "1";
+  });
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(LS_KEY_AXIS, axisExpanded ? "1" : "0");
+  }, [axisExpanded]);
+
+  // Total open (unanswered) Axis questions across all steps — used for collapsed-rail badge.
+  const axisOpenTotal = useMemo(() => {
+    let n = 0;
+    for (const k of Object.keys(axis.state) as Array<keyof typeof axis.state>) {
+      const st = axis.state[k];
+      if (!st) continue;
+      n += st.questions.filter((q) => !q.answered_at).length;
+    }
+    return n;
+  }, [axis.state]);
+
   const [lockedA2Output, setLockedA2Output] = useState<{
     interpretation: Interpretation | null;
     clarificationPoints: ClarificationPoint[];
