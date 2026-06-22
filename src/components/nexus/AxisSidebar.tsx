@@ -34,6 +34,7 @@ interface AxisSidebarProps {
   onApplyPending: (change: AxisPendingChange) => void;
   onRevertChange: (change: AxisPendingChange) => void;
   onFreeChat: (text: string) => Promise<AxisPendingChange[]>;
+  onCollapse?: () => void;
 }
 
 const STEP_LABELS: Record<AxisStep, string> = {
