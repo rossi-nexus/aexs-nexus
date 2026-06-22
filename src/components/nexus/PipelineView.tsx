@@ -279,8 +279,11 @@ const PipelineInner = ({ sessionId, programmeId, refreshSessions }: PipelineInne
 
   return (
     <div className="h-full flex flex-col bg-background overflow-hidden">
+      <div className="flex-1 flex min-h-0">
       <ResizablePanelGroup direction="horizontal" className="flex-1 min-h-0">
-        <ResizablePanel defaultSize={75} minSize={50}>
+        <ResizablePanel defaultSize={axisExpanded ? 75 : 100} minSize={50}>
+          <main className="h-full flex flex-col min-w-0">
+            {/* main content unchanged below */}
           <main className="h-full flex flex-col min-w-0">
             <AtmosphereLayer variant={atmosphereVariant} className="flex-1 overflow-y-auto">
               <div className="max-w-4xl mx-auto px-8 py-8 space-y-4">
