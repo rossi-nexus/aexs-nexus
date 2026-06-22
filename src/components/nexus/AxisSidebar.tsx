@@ -10,7 +10,7 @@
 //    changes also expose Revert.
 
 import { useEffect, useMemo, useState } from "react";
-import { Bot, Send, Sparkles, Loader2, RotateCcw, X } from "lucide-react";
+import { Bot, Send, Sparkles, Loader2, RotateCcw, X, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
@@ -34,6 +34,7 @@ interface AxisSidebarProps {
   onApplyPending: (change: AxisPendingChange) => void;
   onRevertChange: (change: AxisPendingChange) => void;
   onFreeChat: (text: string) => Promise<AxisPendingChange[]>;
+  onCollapse?: () => void;
 }
 
 const STEP_LABELS: Record<AxisStep, string> = {
@@ -58,6 +59,7 @@ const AxisSidebar = ({
   onApplyPending,
   onRevertChange,
   onFreeChat,
+  onCollapse,
 }: AxisSidebarProps) => {
   const [chatText, setChatText] = useState("");
   const [chatBusy, setChatBusy] = useState(false);
@@ -123,6 +125,15 @@ const AxisSidebar = ({
             ) : null}
           </span>
         </div>
+        {onCollapse && (
+          <button
+            onClick={onCollapse}
+            title="Collapse Axis"
+            className="shrink-0 w-7 h-7 rounded flex items-center justify-center text-foreground-muted hover:text-foreground hover:bg-surface transition-colors"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        )}
       </div>
 
       {/* Step tabs */}

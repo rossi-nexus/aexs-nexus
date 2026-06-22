@@ -2,7 +2,8 @@ import logo from "@/assets/logo_aexs.png";
 import { useAuth } from "@/hooks/useAuth";
 import { LogOut } from "lucide-react";
 import { NotificationsBell } from "@/components/notifications/NotificationsBell";
-import StatusChips from "./StatusChips";
+// StatusChips intentionally not rendered (UI batch 02c). Component retained for future
+// reintroduction via a user preference. Do not delete StatusChips.tsx.
 
 const TopBar = () => {
   const { user, signOut, signingOut } = useAuth();
@@ -22,8 +23,6 @@ const TopBar = () => {
       </div>
 
       <div className="flex items-center gap-4">
-        <StatusChips />
-        <div className="h-7 w-px bg-border" />
         <NotificationsBell />
         <div className="w-8 h-8 rounded-full bg-surface border border-border flex items-center justify-center">
           <span className="text-mono-xs font-mono text-foreground-muted">{initials}</span>

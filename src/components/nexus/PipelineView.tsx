@@ -19,6 +19,7 @@ import { useAnalysis } from "@/hooks/useAnalysis";
 import { useDatabaseCheck } from "@/hooks/useDatabaseCheck";
 import { EXAMPLE_SEARCHES } from "@/constants/exampleSearches";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { ChevronLeft, Bot } from "lucide-react";
 import type { Interpretation, ClarificationPoint } from "@/types/interpretation";
 import type { LockedA3Output, LockedA4Output } from "@/types/pipeline";
 import type { RoleSearchResult } from "@/hooks/useSearch";
@@ -63,6 +64,28 @@ const PipelineInner = ({ sessionId, programmeId, refreshSessions }: PipelineInne
   const stepA5 = useDatabaseCheck({ sessionId });
   const axis = useAxis({ sessionId });
   const [showExamples, setShowExamples] = useState(false);
+
+  // UI batch 02c: Axis sidebar collapsed by default; persist user choice.
+  const LS_KEY_AXIS = "nexus.sidebar.axis.expanded";
+  const [axisExpanded, setAxisExpanded] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem(LS_KEY_AXIS) === "1";
+  });
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(LS_KEY_AXIS, axisExpanded ? "1" : "0");
+  }, [axisExpanded]);
+
+  // Total open (unanswered) Axis questions across all steps — used for collapsed-rail badge.
+  const axisOpenTotal = useMemo(() => {
+    let n = 0;
+    for (const k of Object.keys(axis.state) as Array<keyof typeof axis.state>) {
+      const st = axis.state[k];
+      if (!st) continue;
+      n += st.questions.filter((q) => !q.answered_at).length;
+    }
+    return n;
+  }, [axis.state]);
 
   const [lockedA2Output, setLockedA2Output] = useState<{
     interpretation: Interpretation | null;
@@ -256,8 +279,9 @@ const PipelineInner = ({ sessionId, programmeId, refreshSessions }: PipelineInne
 
   return (
     <div className="h-full flex flex-col bg-background overflow-hidden">
+      <div className="flex-1 flex min-h-0">
       <ResizablePanelGroup direction="horizontal" className="flex-1 min-h-0">
-        <ResizablePanel defaultSize={75} minSize={50}>
+        <ResizablePanel defaultSize={axisExpanded ? 75 : 100} minSize={50}>
           <main className="h-full flex flex-col min-w-0">
             <AtmosphereLayer variant={atmosphereVariant} className="flex-1 overflow-y-auto">
               <div className="max-w-4xl mx-auto px-8 py-8 space-y-4">
@@ -400,23 +424,52 @@ const PipelineInner = ({ sessionId, programmeId, refreshSessions }: PipelineInne
           </main>
         </ResizablePanel>
 
-        <ResizableHandle className="w-px bg-transparent hover:bg-border-accent/30 transition-colors data-[resize-handle-active]:bg-border-accent/50" />
-
-        <ResizablePanel defaultSize={25} minSize={15} maxSize={50}>
-          <AxisSidebarConnected
-            sessionId={sessionId}
-            axis={axis}
-            stepA1Status={stepA1.status}
-            stepA1ContextText={stepA1.contextText}
-            stepA1Attachments={stepA1.attachments}
-            stepA2Status={stepA2.status}
-            interpretation={stepA2.interpretation}
-            clarificationPoints={stepA2.clarificationPoints}
-            applyAxisChange={stepA2.applyAxisChange}
-            unlockStepA2={stepA2.unlock}
-          />
-        </ResizablePanel>
+        {axisExpanded && (
+          <>
+            <ResizableHandle className="w-px bg-transparent hover:bg-border-accent/30 transition-colors data-[resize-handle-active]:bg-border-accent/50" />
+            <ResizablePanel defaultSize={25} minSize={15} maxSize={50}>
+              <AxisSidebarConnected
+                sessionId={sessionId}
+                axis={axis}
+                stepA1Status={stepA1.status}
+                stepA1ContextText={stepA1.contextText}
+                stepA1Attachments={stepA1.attachments}
+                stepA2Status={stepA2.status}
+                interpretation={stepA2.interpretation}
+                clarificationPoints={stepA2.clarificationPoints}
+                applyAxisChange={stepA2.applyAxisChange}
+                unlockStepA2={stepA2.unlock}
+                onCollapse={() => setAxisExpanded(false)}
+              />
+            </ResizablePanel>
+          </>
+        )}
       </ResizablePanelGroup>
+
+      {!axisExpanded && (
+        <aside className="h-full w-12 bg-elevated border-l border-border flex flex-col shrink-0">
+          <button
+            onClick={() => setAxisExpanded(true)}
+            className="h-10 flex items-center justify-center bg-surface/40 text-foreground-secondary hover:bg-surface hover:text-foreground transition-colors border-b border-border"
+            title="Expand Axis"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => setAxisExpanded(true)}
+            className="mt-2 mx-auto w-9 h-9 rounded-md flex items-center justify-center text-accent-teal hover:bg-surface/60 relative"
+            title={axisOpenTotal > 0 ? `Axis · ${axisOpenTotal} open question${axisOpenTotal === 1 ? "" : "s"}` : "Axis"}
+          >
+            <Bot className="w-4 h-4" />
+            {axisOpenTotal > 0 && (
+              <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-warning text-[10px] font-semibold text-warning-foreground flex items-center justify-center leading-none">
+                {axisOpenTotal}
+              </span>
+            )}
+          </button>
+        </aside>
+      )}
+      </div>
     </div>
   );
 };
@@ -443,6 +496,7 @@ interface AxisSidebarConnectedProps {
   clarificationPoints: ClarificationPoint[];
   applyAxisChange: (action: { kind: string; target?: string; value?: any }) => { applied: boolean; previousValue?: any };
   unlockStepA2: () => Promise<void>;
+  onCollapse?: () => void;
 }
 
 type LockGate =
@@ -461,6 +515,7 @@ const AxisSidebarConnected = ({
   clarificationPoints,
   applyAxisChange,
   unlockStepA2,
+  onCollapse,
 }: AxisSidebarConnectedProps) => {
   const [gate, setGate] = useState<LockGate | null>(null);
 
@@ -702,6 +757,7 @@ const AxisSidebarConnected = ({
         onApplyPending={handleApplyPending}
         onRevertChange={handleRevertChange}
         onFreeChat={handleFreeChat}
+        onCollapse={onCollapse}
       />
 
       <Dialog open={gate !== null} onOpenChange={(o) => !o && setGate(null)}>
