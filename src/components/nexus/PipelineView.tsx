@@ -496,6 +496,7 @@ interface AxisSidebarConnectedProps {
   clarificationPoints: ClarificationPoint[];
   applyAxisChange: (action: { kind: string; target?: string; value?: any }) => { applied: boolean; previousValue?: any };
   unlockStepA2: () => Promise<void>;
+  onCollapse?: () => void;
 }
 
 type LockGate =
