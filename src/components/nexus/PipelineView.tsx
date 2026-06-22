@@ -426,23 +426,52 @@ const PipelineInner = ({ sessionId, programmeId, refreshSessions }: PipelineInne
           </main>
         </ResizablePanel>
 
-        <ResizableHandle className="w-px bg-transparent hover:bg-border-accent/30 transition-colors data-[resize-handle-active]:bg-border-accent/50" />
-
-        <ResizablePanel defaultSize={25} minSize={15} maxSize={50}>
-          <AxisSidebarConnected
-            sessionId={sessionId}
-            axis={axis}
-            stepA1Status={stepA1.status}
-            stepA1ContextText={stepA1.contextText}
-            stepA1Attachments={stepA1.attachments}
-            stepA2Status={stepA2.status}
-            interpretation={stepA2.interpretation}
-            clarificationPoints={stepA2.clarificationPoints}
-            applyAxisChange={stepA2.applyAxisChange}
-            unlockStepA2={stepA2.unlock}
-          />
-        </ResizablePanel>
+        {axisExpanded && (
+          <>
+            <ResizableHandle className="w-px bg-transparent hover:bg-border-accent/30 transition-colors data-[resize-handle-active]:bg-border-accent/50" />
+            <ResizablePanel defaultSize={25} minSize={15} maxSize={50}>
+              <AxisSidebarConnected
+                sessionId={sessionId}
+                axis={axis}
+                stepA1Status={stepA1.status}
+                stepA1ContextText={stepA1.contextText}
+                stepA1Attachments={stepA1.attachments}
+                stepA2Status={stepA2.status}
+                interpretation={stepA2.interpretation}
+                clarificationPoints={stepA2.clarificationPoints}
+                applyAxisChange={stepA2.applyAxisChange}
+                unlockStepA2={stepA2.unlock}
+                onCollapse={() => setAxisExpanded(false)}
+              />
+            </ResizablePanel>
+          </>
+        )}
       </ResizablePanelGroup>
+
+      {!axisExpanded && (
+        <aside className="h-full w-12 bg-elevated border-l border-border flex flex-col shrink-0">
+          <button
+            onClick={() => setAxisExpanded(true)}
+            className="h-10 flex items-center justify-center bg-surface/40 text-foreground-secondary hover:bg-surface hover:text-foreground transition-colors border-b border-border"
+            title="Expand Axis"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => setAxisExpanded(true)}
+            className="mt-2 mx-auto w-9 h-9 rounded-md flex items-center justify-center text-accent-teal hover:bg-surface/60 relative"
+            title={axisOpenTotal > 0 ? `Axis · ${axisOpenTotal} open question${axisOpenTotal === 1 ? "" : "s"}` : "Axis"}
+          >
+            <Bot className="w-4 h-4" />
+            {axisOpenTotal > 0 && (
+              <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-warning text-[10px] font-semibold text-warning-foreground flex items-center justify-center leading-none">
+                {axisOpenTotal}
+              </span>
+            )}
+          </button>
+        </aside>
+      )}
+      </div>
     </div>
   );
 };
