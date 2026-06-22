@@ -757,6 +757,7 @@ const AxisSidebarConnected = ({
         onApplyPending={handleApplyPending}
         onRevertChange={handleRevertChange}
         onFreeChat={handleFreeChat}
+        onCollapse={onCollapse}
       />
 
       <Dialog open={gate !== null} onOpenChange={(o) => !o && setGate(null)}>
