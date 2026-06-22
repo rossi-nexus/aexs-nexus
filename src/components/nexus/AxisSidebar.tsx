@@ -10,7 +10,7 @@
 //    changes also expose Revert.
 
 import { useEffect, useMemo, useState } from "react";
-import { Bot, Send, Sparkles, Loader2, RotateCcw, X } from "lucide-react";
+import { Bot, Send, Sparkles, Loader2, RotateCcw, X, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
