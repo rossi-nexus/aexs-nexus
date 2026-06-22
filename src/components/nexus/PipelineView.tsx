@@ -19,6 +19,7 @@ import { useAnalysis } from "@/hooks/useAnalysis";
 import { useDatabaseCheck } from "@/hooks/useDatabaseCheck";
 import { EXAMPLE_SEARCHES } from "@/constants/exampleSearches";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { ChevronLeft, Bot } from "lucide-react";
 import type { Interpretation, ClarificationPoint } from "@/types/interpretation";
 import type { LockedA3Output, LockedA4Output } from "@/types/pipeline";
 import type { RoleSearchResult } from "@/hooks/useSearch";
