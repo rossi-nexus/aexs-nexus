@@ -43,8 +43,18 @@ function formatSessionDate(iso: string): string {
   return `${month} ${day}`;
 }
 
+const LS_KEY_SIDEBAR = "nexus.sidebar.workspace.expanded";
+
 const SidebarNav = () => {
-  const [expanded, setExpanded] = useState(true);
+  // UI batch 02c: default collapsed on first load; persist user choice across reloads.
+  const [expanded, setExpanded] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem(LS_KEY_SIDEBAR) === "1";
+  });
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(LS_KEY_SIDEBAR, expanded ? "1" : "0");
+  }, [expanded]);
   const {
     sessions, sessionId, setSessionId, isAdmin, createSession, renameSession,
     assignSessionToProgramme, deleteSession,
