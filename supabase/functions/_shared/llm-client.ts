@@ -49,8 +49,13 @@ export function getLLMConfig(): LLMConfig {
  * - Lovable: passes through unchanged.
  */
 export function normalizeModel(model: string, provider: LLMProvider): string {
-  if (provider === "google" && model.startsWith("google/")) {
-    return model.slice("google/".length);
+  if (provider === "google") {
+    // Strip Lovable/OpenRouter "google/" prefix if present.
+    let m = model.startsWith("google/") ? model.slice("google/".length) : model;
+    // Google's OpenAI-compat endpoint requires a "models/" prefix on the model id
+    // (returns HTTP 404 otherwise).
+    if (!m.startsWith("models/")) m = "models/" + m;
+    return m;
   }
   return model;
 }

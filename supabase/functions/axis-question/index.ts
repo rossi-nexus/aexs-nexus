@@ -129,7 +129,7 @@ serve(async (req) => {
     let questions: any[] = [];
     try {
       const result = await callLLM({
-        model: "google/gemini-2.5-flash",
+        model: "models/gemini-2.5-flash",
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: userMessage },

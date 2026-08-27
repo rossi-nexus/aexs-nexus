@@ -125,7 +125,7 @@ Respond using the submit_proposals tool.`;
 
 async function callAi(prompt: string, googleApiKey: string) {
   const body = {
-    model: "gemini-2.5-flash",
+    model: "models/gemini-2.5-flash",
     messages: [{ role: "user", content: prompt }],
     max_tokens: 4096,
     tools: [PROPOSALS_TOOL_SCHEMA],

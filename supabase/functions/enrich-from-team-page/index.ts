@@ -375,7 +375,7 @@ Call submit_contacts with the result.`;
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "gemini-2.5-flash",
+      model: "models/gemini-2.5-flash",
       messages: [{ role: "user", content: prompt }],
       tools: [TOOL],
       tool_choice: { type: "function", function: { name: "submit_contacts" } },

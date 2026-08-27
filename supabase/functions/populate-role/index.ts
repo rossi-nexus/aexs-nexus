@@ -163,7 +163,7 @@ When you fill proposed_new[], you MUST also include proposed_category_id (UUID o
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "gemini-2.5-flash",
+          model: "models/gemini-2.5-flash",
           messages: [
             { role: "system", content: SYSTEM_PROMPT + extraSystemSuffix },
             { role: "user", content: userMessage },
