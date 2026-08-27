@@ -378,11 +378,11 @@ serve(async (req) => {
     }
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const lovableApiKey = Deno.env.get("LOVABLE_API_KEY");
+    const googleApiKey = Deno.env.get("GOOGLE_API_KEY");
     const serperApiKey = Deno.env.get("SERPER_API_KEY");
 
-    if (!lovableApiKey) {
-      return new Response(JSON.stringify({ error: "LOVABLE_API_KEY not configured" }), {
+    if (!googleApiKey) {
+      return new Response(JSON.stringify({ error: "GOOGLE_API_KEY not configured" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -573,7 +573,7 @@ ${gatheredResults.map((r, i) => `[${i + 1}] "${r.title}" — ${r.url}\n    ${r.s
     async function callAI(): Promise<{ data: any; mode: "tool" | "json" }> {
       // Attempt 1: tool calling
       const body1 = {
-        model: "google/gemini-2.5-flash",
+        model: "gemini-2.5-flash",
         messages: [
           { role: "system", content: ANALYSIS_PROMPT },
           { role: "user", content: userMessage },
@@ -582,9 +582,9 @@ ${gatheredResults.map((r, i) => `[${i + 1}] "${r.title}" — ${r.url}\n    ${r.s
         tools: [ANALYSIS_TOOL_SCHEMA],
         tool_choice: { type: "function", function: { name: "submit_analysis" } },
       };
-      const resp1 = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      const resp1 = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
         method: "POST",
-        headers: { Authorization: `Bearer ${lovableApiKey}`, "Content-Type": "application/json" },
+        headers: { Authorization: `Bearer ${googleApiKey}`, "Content-Type": "application/json" },
         body: JSON.stringify(body1),
       });
       if (resp1.status === 429) throw new Error("Rate limited (429). Please retry shortly.");
@@ -605,16 +605,16 @@ ${gatheredResults.map((r, i) => `[${i + 1}] "${r.title}" — ${r.url}\n    ${r.s
 
       // Attempt 2: JSON fallback
       const body2 = {
-        model: "google/gemini-2.5-flash",
+        model: "gemini-2.5-flash",
         messages: [
           { role: "system", content: ANALYSIS_PROMPT + "\n\nReturn ONLY valid JSON matching the submit_analysis schema. No markdown fences." },
           { role: "user", content: userMessage },
         ],
         max_tokens: 8192,
       };
-      const resp2 = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      const resp2 = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
         method: "POST",
-        headers: { Authorization: `Bearer ${lovableApiKey}`, "Content-Type": "application/json" },
+        headers: { Authorization: `Bearer ${googleApiKey}`, "Content-Type": "application/json" },
         body: JSON.stringify(body2),
       });
       if (resp2.status === 429) throw new Error("Rate limited (429). Please retry shortly.");

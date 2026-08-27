@@ -1,8 +1,59 @@
-// SX-03 — Lovable AI Gateway seam.
-// All Lovable AI Gateway URL + LOVABLE_API_KEY usage in NEW code lives here.
-// Existing edge functions are backported in SX-05.
+// LLM gateway abstraction.
+// Prefers direct Google AI (Gemini via OpenAI-compat endpoint) when GOOGLE_API_KEY is set.
+// Falls back to the Lovable AI Gateway if only LOVABLE_API_KEY is set — this keeps
+// backward compatibility during the Lovable → Vercel migration. Post-cutover, only
+// GOOGLE_API_KEY should be configured on the new Supabase project.
+//
+// Also exports `getLLMConfig()` and `normalizeModel()` so direct-caller edge functions
+// (the ones not yet migrated to `callLLM()`) can use the same routing logic without
+// a full refactor.
 
-const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
+const GATEWAY_URLS = {
+  google: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+  lovable: "https://ai.gateway.lovable.dev/v1/chat/completions",
+} as const;
+
+export type LLMProvider = "google" | "lovable";
+
+export interface LLMConfig {
+  url: string;
+  apiKey: string;
+  providerHint: LLMProvider;
+}
+
+/**
+ * Returns the current LLM gateway config based on env vars.
+ * Prefers Google direct (post-migration). Falls back to Lovable gateway if only that key exists.
+ * Throws if neither key is configured.
+ */
+export function getLLMConfig(): LLMConfig {
+  const googleKey = Deno.env.get("GOOGLE_API_KEY");
+  if (googleKey) {
+    return { url: GATEWAY_URLS.google, apiKey: googleKey, providerHint: "google" };
+  }
+  const lovableKey = Deno.env.get("LOVABLE_API_KEY");
+  if (lovableKey) {
+    return { url: GATEWAY_URLS.lovable, apiKey: lovableKey, providerHint: "lovable" };
+  }
+  throw new LLMError(
+    "No LLM API key configured (need GOOGLE_API_KEY or LOVABLE_API_KEY)",
+    500,
+    "",
+  );
+}
+
+/**
+ * Adapts a model string to the current provider.
+ * - Google direct: strips the "google/" prefix (Lovable used OpenRouter-style prefixing;
+ *   Google's native endpoint expects bare model names like "gemini-2.5-flash").
+ * - Lovable: passes through unchanged.
+ */
+export function normalizeModel(model: string, provider: LLMProvider): string {
+  if (provider === "google" && model.startsWith("google/")) {
+    return model.slice("google/".length);
+  }
+  return model;
+}
 
 export interface LLMMessage {
   role: "system" | "user" | "assistant" | "tool";
@@ -47,11 +98,11 @@ export class LLMError extends Error {
 }
 
 export async function callLLM(opts: CallLLMOptions): Promise<LLMResult> {
-  const apiKey = Deno.env.get("LOVABLE_API_KEY");
-  if (!apiKey) throw new LLMError("LOVABLE_API_KEY is not configured", 500, "");
+  const { url, apiKey, providerHint } = getLLMConfig();
+  const model = normalizeModel(opts.model, providerHint);
 
   const body: Record<string, unknown> = {
-    model: opts.model,
+    model,
     messages: opts.messages,
     max_tokens: opts.max_tokens ?? 4096,
   };
@@ -59,7 +110,7 @@ export async function callLLM(opts: CallLLMOptions): Promise<LLMResult> {
   if (opts.tools) body.tools = opts.tools;
   if (opts.tool_choice) body.tool_choice = opts.tool_choice;
 
-  const resp = await fetch(GATEWAY_URL, {
+  const resp = await fetch(url, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${apiKey}`,
@@ -70,9 +121,8 @@ export async function callLLM(opts: CallLLMOptions): Promise<LLMResult> {
 
   if (!resp.ok) {
     const text = await resp.text().catch(() => "");
-    // 429/402 passthrough — caller can map to standard rate-limit toast.
     throw new LLMError(
-      `Lovable AI Gateway returned ${resp.status} (${opts.requestKind ?? "llm"})`,
+      `LLM gateway (${providerHint}) returned ${resp.status} (${opts.requestKind ?? "llm"})`,
       resp.status,
       text,
     );

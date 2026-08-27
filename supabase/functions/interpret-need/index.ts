@@ -390,10 +390,10 @@ serve(async (req) => {
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const lovableApiKey = Deno.env.get("LOVABLE_API_KEY");
+    const googleApiKey = Deno.env.get("GOOGLE_API_KEY");
 
-    if (!lovableApiKey) {
-      return new Response(JSON.stringify({ error: "LOVABLE_API_KEY not configured" }), {
+    if (!googleApiKey) {
+      return new Response(JSON.stringify({ error: "GOOGLE_API_KEY not configured" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -538,7 +538,7 @@ When you fill any role's proposed_new[] array, you MUST also include:
     // Step D — Call AI (try tool calling first, fall back to JSON mode)
     async function callAI(useToolCalling: boolean) {
       const body: any = {
-        model: "google/gemini-2.5-pro",
+        model: "gemini-2.5-pro",
         messages: [
           { role: "system", content: SYSTEM_PROMPT + (useToolCalling ? "" : "\n\nReturn ONLY valid JSON matching the described output format. No markdown fences, no explanation.") },
           { role: "user", content: userMessage },
@@ -550,10 +550,10 @@ When you fill any role's proposed_new[] array, you MUST also include:
         body.tools = [TOOL_SCHEMA];
         body.tool_choice = { type: "function", function: { name: "submit_interpretation" } };
       }
-      return fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      return fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${lovableApiKey}`,
+          Authorization: `Bearer ${googleApiKey}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),

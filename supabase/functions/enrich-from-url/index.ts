@@ -142,8 +142,8 @@ async function fetchUrlText(url: string): Promise<string> {
     : text;
 }
 
-import {
 import { safeFetch } from "../_shared/urlGuard.ts";
+import {
   buildOntologyBlock,
   type OntoCategory,
   type OntoEntry,
@@ -198,20 +198,20 @@ Rules:
 Respond using the submit_proposals tool.`;
 }
 
-async function callAi(prompt: string, lovableApiKey: string) {
+async function callAi(prompt: string, googleApiKey: string) {
   const body = {
-    model: "google/gemini-2.5-flash",
+    model: "gemini-2.5-flash",
     messages: [{ role: "user", content: prompt }],
     max_tokens: 4096,
     tools: [PROPOSALS_TOOL_SCHEMA],
     tool_choice: { type: "function", function: { name: "submit_proposals" } },
   };
   const resp = await fetch(
-    "https://ai.gateway.lovable.dev/v1/chat/completions",
+    "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${lovableApiKey}`,
+        Authorization: `Bearer ${googleApiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
@@ -255,10 +255,10 @@ serve(async (req) => {
     }
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const lovableApiKey = Deno.env.get("LOVABLE_API_KEY");
-    if (!lovableApiKey) {
+    const googleApiKey = Deno.env.get("GOOGLE_API_KEY");
+    if (!googleApiKey) {
       return new Response(
-        JSON.stringify({ error: "LOVABLE_API_KEY not configured" }),
+        JSON.stringify({ error: "GOOGLE_API_KEY not configured" }),
         {
           status: 500,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -401,12 +401,12 @@ serve(async (req) => {
 
     let aiResult: { proposals?: unknown; extraction_summary?: string };
     try {
-      aiResult = await callAi(prompt, lovableApiKey);
+      aiResult = await callAi(prompt, googleApiKey);
     } catch (_e) {
       try {
         aiResult = await callAi(
           prompt + "\n\nReminder: respond ONLY via the submit_proposals tool with valid arguments.",
-          lovableApiKey,
+          googleApiKey,
         );
       } catch (e2) {
         return new Response(
