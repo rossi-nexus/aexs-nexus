@@ -544,7 +544,6 @@ When you fill any role's proposed_new[] array, you MUST also include:
           { role: "user", content: userMessage },
         ],
         max_tokens: 16384,
-        reasoning: { effort: "high" },
       };
       if (useToolCalling) {
         body.tools = [TOOL_SCHEMA];

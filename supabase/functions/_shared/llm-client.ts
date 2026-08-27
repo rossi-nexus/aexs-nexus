@@ -106,7 +106,9 @@ export async function callLLM(opts: CallLLMOptions): Promise<LLMResult> {
     messages: opts.messages,
     max_tokens: opts.max_tokens ?? 4096,
   };
-  if (opts.reasoning) body.reasoning = opts.reasoning;
+  // `reasoning` is an OpenRouter/Lovable extension; Google's OpenAI-compat endpoint
+  // rejects it with HTTP 400. Only pass it through for the Lovable gateway.
+  if (opts.reasoning && providerHint === "lovable") body.reasoning = opts.reasoning;
   if (opts.tools) body.tools = opts.tools;
   if (opts.tool_choice) body.tool_choice = opts.tool_choice;
 
