@@ -305,7 +305,7 @@ async function llmExtract(
   productName: string,
   actorName: string,
   pageUrl: string,
-  lovableApiKey: string,
+  googleApiKey: string,
 ): Promise<LlmExtract> {
   const TOOL = {
     type: "function" as const,
@@ -361,11 +361,11 @@ Extract:
 
 Submit only via the submit_product_enrichment tool.`;
 
-  const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+  const resp = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
     method: "POST",
-    headers: { Authorization: `Bearer ${lovableApiKey}`, "Content-Type": "application/json" },
+    headers: { Authorization: `Bearer ${googleApiKey}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      model: "google/gemini-2.5-flash",
+      model: "gemini-2.5-flash",
       messages: [{ role: "user", content: prompt }],
       tools: [TOOL],
       tool_choice: { type: "function", function: { name: "submit_product_enrichment" } },
@@ -496,8 +496,8 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const lovableApiKey = Deno.env.get("LOVABLE_API_KEY");
-    if (!lovableApiKey) return json({ error: "LOVABLE_API_KEY not configured" }, 500);
+    const googleApiKey = Deno.env.get("GOOGLE_API_KEY");
+    if (!googleApiKey) return json({ error: "GOOGLE_API_KEY not configured" }, 500);
 
     const supabaseAuth = createClient(supabaseUrl, anonKey, {
       global: { headers: { Authorization: authHeader } },
@@ -602,7 +602,7 @@ serve(async (req) => {
     // LLM extract.
     let extracted: LlmExtract = { description: "", specs: [], suggested_tags: [] };
     try {
-      extracted = await llmExtract(pageText, productName, actorRow.legal_name, productUrl, lovableApiKey);
+      extracted = await llmExtract(pageText, productName, actorRow.legal_name, productUrl, googleApiKey);
       diag.llm_description_preview = extracted.description.slice(0, 200);
     } catch (e) {
       diag.llm_error = (e as Error).message;

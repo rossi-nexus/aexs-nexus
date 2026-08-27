@@ -169,11 +169,11 @@ serve(async (req) => {
     }
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const lovableApiKey = Deno.env.get("LOVABLE_API_KEY");
+    const googleApiKey = Deno.env.get("GOOGLE_API_KEY");
     const serperApiKey = Deno.env.get("SERPER_API_KEY");
 
-    if (!lovableApiKey) {
-      return new Response(JSON.stringify({ error: "LOVABLE_API_KEY not configured" }), {
+    if (!googleApiKey) {
+      return new Response(JSON.stringify({ error: "GOOGLE_API_KEY not configured" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -251,7 +251,7 @@ ${(() => {
 
     async function callAI(systemPrompt: string, userMessage: string, toolSchema: any, toolName: string, maxTokens: number) {
       const body: any = {
-        model: "google/gemini-2.5-flash",
+        model: "gemini-2.5-flash",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userMessage },
@@ -261,10 +261,10 @@ ${(() => {
         tool_choice: { type: "function", function: { name: toolName } },
       };
 
-      const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      const resp = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${lovableApiKey}`,
+          Authorization: `Bearer ${googleApiKey}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
@@ -287,17 +287,17 @@ ${(() => {
 
       // Retry with JSON mode
       const body2: any = {
-        model: "google/gemini-2.5-flash",
+        model: "gemini-2.5-flash",
         messages: [
           { role: "system", content: systemPrompt + "\n\nReturn ONLY valid JSON. No markdown fences." },
           { role: "user", content: userMessage },
         ],
         max_tokens: maxTokens,
       };
-      const resp2 = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      const resp2 = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${lovableApiKey}`,
+          Authorization: `Bearer ${googleApiKey}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body2),

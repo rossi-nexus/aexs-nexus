@@ -20,9 +20,9 @@ function looksNorwegian(s: unknown): boolean {
   return typeof s === "string" && s.length > 0 && NO_RE.test(s);
 }
 
-async function translate(text: string, lovableApiKey: string): Promise<string> {
+async function translate(text: string, googleApiKey: string): Promise<string> {
   const body = {
-    model: "google/gemini-2.5-flash-lite",
+    model: "gemini-2.5-flash-lite",
     messages: [
       {
         role: "system",
@@ -33,11 +33,11 @@ async function translate(text: string, lovableApiKey: string): Promise<string> {
     ],
   };
   const resp = await fetch(
-    "https://ai.gateway.lovable.dev/v1/chat/completions",
+    "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${lovableApiKey}`,
+        Authorization: `Bearer ${googleApiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
@@ -137,10 +137,10 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const lovableApiKey = Deno.env.get("LOVABLE_API_KEY");
-    if (!lovableApiKey) {
+    const googleApiKey = Deno.env.get("GOOGLE_API_KEY");
+    if (!googleApiKey) {
       return new Response(
-        JSON.stringify({ error: "LOVABLE_API_KEY not configured" }),
+        JSON.stringify({ error: "GOOGLE_API_KEY not configured" }),
         {
           status: 500,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -199,7 +199,7 @@ serve(async (req) => {
 
       if (looksNorwegian(row.actor_description)) {
         try {
-          newDesc = await translate(row.actor_description as string, lovableApiKey);
+          newDesc = await translate(row.actor_description as string, googleApiKey);
           counts.personal_descriptions_translated += 1;
           dirty = true;
         } catch {
@@ -211,7 +211,7 @@ serve(async (req) => {
       const rawJson = JSON.stringify(row.analysis_data ?? null);
       if (rawJson && NO_RE.test(rawJson)) {
         const counter = { changed: 0 };
-        newAnalysis = await translateJsonInPlace(row.analysis_data, lovableApiKey, counter);
+        newAnalysis = await translateJsonInPlace(row.analysis_data, googleApiKey, counter);
         if (counter.changed > 0) {
           counts.personal_fields_translated += counter.changed;
           dirty = true;
@@ -240,7 +240,7 @@ serve(async (req) => {
     for (const t of tags ?? []) {
       if (!looksNorwegian(t.evidence)) continue;
       try {
-        const translated = await translate(t.evidence as string, lovableApiKey);
+        const translated = await translate(t.evidence as string, googleApiKey);
         if (translated && translated !== t.evidence) {
           const { error } = await admin
             .from("actor_ontology_tags")
@@ -263,7 +263,7 @@ serve(async (req) => {
     for (const c of contacts ?? []) {
       if (!looksNorwegian(c.title)) continue;
       try {
-        const translated = await translate(c.title as string, lovableApiKey);
+        const translated = await translate(c.title as string, googleApiKey);
         if (translated && translated !== c.title) {
           const { error } = await admin
             .from("actor_contacts")
