@@ -142,8 +142,8 @@ async function fetchUrlText(url: string): Promise<string> {
     : text;
 }
 
-import {
 import { safeFetch } from "../_shared/urlGuard.ts";
+import {
   buildOntologyBlock,
   type OntoCategory,
   type OntoEntry,
