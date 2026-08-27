@@ -251,7 +251,7 @@ ${(() => {
 
     async function callAI(systemPrompt: string, userMessage: string, toolSchema: any, toolName: string, maxTokens: number) {
       const body: any = {
-        model: "models/gemini-2.5-flash",
+        model: "gemini-3.6-flash",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userMessage },
@@ -287,7 +287,7 @@ ${(() => {
 
       // Retry with JSON mode
       const body2: any = {
-        model: "models/gemini-2.5-flash",
+        model: "gemini-3.6-flash",
         messages: [
           { role: "system", content: systemPrompt + "\n\nReturn ONLY valid JSON. No markdown fences." },
           { role: "user", content: userMessage },

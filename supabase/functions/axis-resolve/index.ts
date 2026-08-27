@@ -193,7 +193,7 @@ Rules:
 
     try {
       const result = await callLLM({
-        model: "models/gemini-2.5-flash",
+        model: "gemini-3.6-flash",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userMessage },

@@ -365,7 +365,7 @@ Submit only via the submit_product_enrichment tool.`;
     method: "POST",
     headers: { Authorization: `Bearer ${googleApiKey}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      model: "models/gemini-2.5-flash",
+      model: "gemini-3.6-flash",
       messages: [{ role: "user", content: prompt }],
       tools: [TOOL],
       tool_choice: { type: "function", function: { name: "submit_product_enrichment" } },

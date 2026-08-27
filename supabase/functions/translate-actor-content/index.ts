@@ -22,7 +22,7 @@ function looksNorwegian(s: unknown): boolean {
 
 async function translate(text: string, googleApiKey: string): Promise<string> {
   const body = {
-    model: "models/gemini-2.5-flash-lite",
+    model: "gemini-3.1-flash-lite",
     messages: [
       {
         role: "system",

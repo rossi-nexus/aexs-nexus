@@ -45,17 +45,14 @@ export function getLLMConfig(): LLMConfig {
 /**
  * Adapts a model string to the current provider.
  * - Google direct: strips the "google/" prefix (Lovable used OpenRouter-style prefixing;
- *   Google's native endpoint expects bare model names like "gemini-2.5-flash").
+ *   Google's native endpoint expects bare model names like "gemini-3.6-flash").
  * - Lovable: passes through unchanged.
  */
 export function normalizeModel(model: string, provider: LLMProvider): string {
-  if (provider === "google") {
-    // Strip Lovable/OpenRouter "google/" prefix if present.
-    let m = model.startsWith("google/") ? model.slice("google/".length) : model;
-    // Google's OpenAI-compat endpoint requires a "models/" prefix on the model id
-    // (returns HTTP 404 otherwise).
-    if (!m.startsWith("models/")) m = "models/" + m;
-    return m;
+  if (provider === "google" && model.startsWith("google/")) {
+    // Strip Lovable/OpenRouter "google/" prefix; Google's OpenAI-compat endpoint
+    // accepts bare names like "gemini-3.6-flash".
+    return model.slice("google/".length);
   }
   return model;
 }

@@ -538,7 +538,7 @@ When you fill any role's proposed_new[] array, you MUST also include:
     // Step D — Call AI (try tool calling first, fall back to JSON mode)
     async function callAI(useToolCalling: boolean) {
       const body: any = {
-        model: "models/gemini-2.5-pro",
+        model: "gemini-3.6-flash",
         messages: [
           { role: "system", content: SYSTEM_PROMPT + (useToolCalling ? "" : "\n\nReturn ONLY valid JSON matching the described output format. No markdown fences, no explanation.") },
           { role: "user", content: userMessage },

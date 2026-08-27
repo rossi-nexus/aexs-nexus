@@ -573,7 +573,7 @@ ${gatheredResults.map((r, i) => `[${i + 1}] "${r.title}" — ${r.url}\n    ${r.s
     async function callAI(): Promise<{ data: any; mode: "tool" | "json" }> {
       // Attempt 1: tool calling
       const body1 = {
-        model: "models/gemini-2.5-flash",
+        model: "gemini-3.6-flash",
         messages: [
           { role: "system", content: ANALYSIS_PROMPT },
           { role: "user", content: userMessage },
@@ -605,7 +605,7 @@ ${gatheredResults.map((r, i) => `[${i + 1}] "${r.title}" — ${r.url}\n    ${r.s
 
       // Attempt 2: JSON fallback
       const body2 = {
-        model: "models/gemini-2.5-flash",
+        model: "gemini-3.6-flash",
         messages: [
           { role: "system", content: ANALYSIS_PROMPT + "\n\nReturn ONLY valid JSON matching the submit_analysis schema. No markdown fences." },
           { role: "user", content: userMessage },
