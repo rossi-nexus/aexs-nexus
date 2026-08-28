@@ -1,4 +1,4 @@
-# NEXUS — Pulse Palette
+# ÆXS NEXUS
 
 AI-assisted supplier discovery and verification platform for Nordic defence & security programmes. Users describe a capability need in natural language; the system interprets it into procurement roles and constraints, searches and enriches a registry of companies ("actors") from official sources (Brønnøysund, CVR, PRH), the web, and documents, and routes results through consultant verification and admin ontology workflows.
 
@@ -6,7 +6,7 @@ AI-assisted supplier discovery and verification platform for Nordic defence & se
 
 - **Frontend:** Vite + React 18 + TypeScript, Tailwind, shadcn/ui, react-router, TanStack Query, Leaflet (maps), Recharts (analytics)
 - **Backend:** Supabase (Postgres + RLS, Auth, Storage, Edge Functions on Deno)
-- **AI:** Lovable AI gateway (Gemini) from edge functions
+- **AI:** Google Gemini via OpenAI-compat endpoint, called directly from edge functions
 
 ## Development
 
