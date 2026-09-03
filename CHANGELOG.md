@@ -2,6 +2,7 @@
 
 One line per shipped change. Newest first. Format: `YYYY-MM-DD [ID] what — why`.
 
+- 2026-09-03 [B-01] LLM models now env-driven (LLM_MODEL_REASON/FAST/LITE, LLM_REASONING_EFFORT) across 13 functions; redeployed — model swaps no longer need code edits. Pro upgrade deferred (no billing).
 - 2026-09-03 [B-02] Step 4 exclusions now persisted on lock and respected by Step 5 + collection save — excluded actors were leaking through
 - 2026-09-03 [ops] Created STATE.md, BACKLOG.md, CHANGELOG.md, CLAUDE.md, evals/ — operating system so sessions don't lose the thread
 - 2026-09-03 [ops] Full audit delivered (v3-copilot/audit-complete-2026-09-03.md + 3 appendices) — code vs intent, data quality, search quality

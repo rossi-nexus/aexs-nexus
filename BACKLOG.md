@@ -8,11 +8,6 @@ Origin: `v3-copilot/audit-complete-2026-09-03.md` §4. Item numbers there map to
 
 ## Now — stop the bleeding (week 1)
 
-### B-01 · Restore reasoning model on `interpret-need` · S · BLOCKED (Google billing)
-**Why:** the most reasoning-heavy call in the product was silently downgraded 2.5-pro→3.6-flash during migration.
-**Do:** move model names to env (`LLM_MODEL_INTERPRET`, `LLM_MODEL_FAST`); set interpret-need to a Pro-class model once billing is on; add `reasoning_effort` if the endpoint accepts it.
-**Accept:** eval Q1 (Narvik) produces ≥4 roles with ≥1 non-obvious role; interpret-need latency <60s; no 429.
-
 ### B-03 · Persist unlocked step state · M
 **Why:** refresh after a 5-minute multi-role search loses everything.
 **Do:** `useSearch`, `useAnalysis`, `useInterpretation` write `status: "editing"` + current output (debounced 2s) on every change; restore on `editing` as well as `locked`.
@@ -112,9 +107,13 @@ Origin: `v3-copilot/audit-complete-2026-09-03.md` §4. Item numbers there map to
 **Do:** Step 1 overlay on first visit (three lines: describe → we interpret → we find → you shortlist); expand sidebar + Axis on first visit; demote "Intelligence" nav item until it exists.
 **Accept:** new user sees overlay once; `localStorage` flag suppresses it after.
 
-### B-21 · Google API billing · Tore
-**Why:** unblocks B-01 and lets `discover-adjacent` use a reasoning model.
-**Accept:** `gemini-3.1-pro-preview` returns 200 from probe.
+### B-21 · Google API billing · Tore · DEFERRED
+**Why:** would unlock Pro-tier Gemini. Decision 2026-09-03: not now.
+
+### B-22 · Second LLM provider for REASON tier · S
+**Why:** get a stronger reasoning model without Google billing. llm-client already routes by URL/key.
+**Do:** add provider `openai_compat` to `_shared/llm-client.ts` reading `LLM_REASON_BASE_URL` + `LLM_REASON_API_KEY`; when set, REASON-tier calls (interpret-need, later discover-adjacent) go there, FAST/LITE stay on Google. Candidates: Groq (free tier), OpenRouter (one key, many models), DeepSeek (very cheap). Tore creates the key.
+**Accept:** interpret-need on eval Q-G1 returns ≥4 roles via the second provider; Google functions unaffected.
 
 ---
 
@@ -130,6 +129,7 @@ Origin: `v3-copilot/audit-complete-2026-09-03.md` §4. Item numbers there map to
 
 ## Done
 
+- 2026-09-03 [B-01] Env-driven model tiers shipped + redeployed (29cce1d, 52d043e). Pro upgrade itself deferred — see B-21/B-22.
 - 2026-09-03 [B-02] Step 4 exclusion leak fixed (360781d)
 - 2026-09-03 [ops] Operating system created (STATE, BACKLOG, CHANGELOG, CLAUDE.md, evals/)
 - 2026-09-03 [ops] Full audit delivered
