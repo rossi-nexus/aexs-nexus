@@ -1,6 +1,6 @@
 # STATE — what is true right now
 
-_Last updated: 2026-09-03 by Cowork. Update at end of every session. Under 150 lines._
+_Last updated: 2026-09-03 (session 2) by Cowork. Update at end of every session. Under 150 lines._
 
 ## Live
 
@@ -20,7 +20,7 @@ _Last updated: 2026-09-03 by Cowork. Update at end of every session. Under 150 l
 
 ## In flight
 
-- Nothing. Audit closed 2026-09-03. Operating system (this file + BACKLOG + CHANGELOG + evals + CLAUDE.md) just created.
+- Nothing. B-02 shipped and deployed (commit 360781d). Awaiting Tore smoke-test: exclude an actor in Step 4, lock, confirm it's absent from Step 5 and from "Save to my collection".
 
 ## Blocked
 
@@ -29,8 +29,7 @@ _Last updated: 2026-09-03 by Cowork. Update at end of every session. Under 150 l
 ## Next (from BACKLOG → Now)
 
 1. B-01 reasoning model (blocked on billing — Tore)
-2. B-02 Step 4 exclusion leak
-3. B-03 persist unlocked step state
+2. B-03 persist unlocked step state
 4. B-04 CoverageBanner soft-unlock
 5. B-05 country normalisation + dedup
 6. B-06 validation prompt: drop incumbent bias, add transferability angle

@@ -2,6 +2,7 @@
 
 One line per shipped change. Newest first. Format: `YYYY-MM-DD [ID] what — why`.
 
+- 2026-09-03 [B-02] Step 4 exclusions now persisted on lock and respected by Step 5 + collection save — excluded actors were leaking through
 - 2026-09-03 [ops] Created STATE.md, BACKLOG.md, CHANGELOG.md, CLAUDE.md, evals/ — operating system so sessions don't lose the thread
 - 2026-09-03 [ops] Full audit delivered (v3-copilot/audit-complete-2026-09-03.md + 3 appendices) — code vs intent, data quality, search quality
 - 2026-08-27 [migration] Purged Lovable branding: new SVG favicon, correct meta/og tags — no Lovable references remain in DOM

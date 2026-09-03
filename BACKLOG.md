@@ -13,11 +13,6 @@ Origin: `v3-copilot/audit-complete-2026-09-03.md` §4. Item numbers there map to
 **Do:** move model names to env (`LLM_MODEL_INTERPRET`, `LLM_MODEL_FAST`); set interpret-need to a Pro-class model once billing is on; add `reasoning_effort` if the endpoint accepts it.
 **Accept:** eval Q1 (Narvik) produces ≥4 roles with ≥1 non-obvious role; interpret-need latency <60s; no 429.
 
-### B-02 · Fix Step 4 exclusion leak · S
-**Why:** excluded actors flow into Step 5 and "Save to my collection". Counter lies.
-**Do:** `AnalysisStep` passes `excludedIds` into `useAnalysis.lock()`; persist `excluded: true` on `ActorAnalysisStatus`; `buildCheckInputs` in `useDatabaseCheck.ts` skips them.
-**Accept:** exclude an actor in Step 4 → it does not appear in Step 5 nor in collection after save.
-
 ### B-03 · Persist unlocked step state · M
 **Why:** refresh after a 5-minute multi-role search loses everything.
 **Do:** `useSearch`, `useAnalysis`, `useInterpretation` write `status: "editing"` + current output (debounced 2s) on every change; restore on `editing` as well as `locked`.
@@ -135,6 +130,7 @@ Origin: `v3-copilot/audit-complete-2026-09-03.md` §4. Item numbers there map to
 
 ## Done
 
+- 2026-09-03 [B-02] Step 4 exclusion leak fixed (360781d)
 - 2026-09-03 [ops] Operating system created (STATE, BACKLOG, CHANGELOG, CLAUDE.md, evals/)
 - 2026-09-03 [ops] Full audit delivered
 - 2026-08-27 [migration] Lovable → Vercel + own Supabase, complete
