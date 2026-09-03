@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.49.4";
 import { buildOntologyBlock } from "../_shared/ontology-prompt.ts";
+import { MODEL_REASON, REASONING_EFFORT } from "../_shared/llm-client.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -538,13 +539,14 @@ When you fill any role's proposed_new[] array, you MUST also include:
     // Step D — Call AI (try tool calling first, fall back to JSON mode)
     async function callAI(useToolCalling: boolean) {
       const body: any = {
-        model: "gemini-3.6-flash",
+        model: MODEL_REASON,
         messages: [
           { role: "system", content: SYSTEM_PROMPT + (useToolCalling ? "" : "\n\nReturn ONLY valid JSON matching the described output format. No markdown fences, no explanation.") },
           { role: "user", content: userMessage },
         ],
         max_tokens: 16384,
       };
+      if (REASONING_EFFORT) body.reasoning_effort = REASONING_EFFORT;
       if (useToolCalling) {
         body.tools = [TOOL_SCHEMA];
         body.tool_choice = { type: "function", function: { name: "submit_interpretation" } };

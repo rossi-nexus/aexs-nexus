@@ -144,6 +144,7 @@ async function fetchUrlText(url: string): Promise<string> {
 
 import { safeFetch } from "../_shared/urlGuard.ts";
 import {
+import { MODEL_FAST } from "../_shared/llm-client.ts";
   buildOntologyBlock,
   type OntoCategory,
   type OntoEntry,
@@ -200,7 +201,7 @@ Respond using the submit_proposals tool.`;
 
 async function callAi(prompt: string, googleApiKey: string) {
   const body = {
-    model: "gemini-3.6-flash",
+    model: MODEL_FAST,
     messages: [{ role: "user", content: prompt }],
     max_tokens: 4096,
     tools: [PROPOSALS_TOOL_SCHEMA],

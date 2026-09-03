@@ -15,6 +15,22 @@ const GATEWAY_URLS = {
 
 export type LLMProvider = "google" | "lovable";
 
+/**
+ * Model tiers, overridable per environment (Supabase secrets). Change a secret + redeploy
+ * to swap models — no code edit. Defaults are the free-tier-safe models as of 2026-09.
+ *  - LLM_MODEL_REASON: heavy reasoning (interpret-need, discover-adjacent). Set to a Pro-class
+ *    model once Google billing is enabled.
+ *  - LLM_MODEL_FAST: everything else.
+ *  - LLM_MODEL_LITE: bulk/cheap (translation).
+ *  - LLM_REASONING_EFFORT: "low" | "medium" | "high". When set, sent as OpenAI-compat
+ *    `reasoning_effort` on REASON-tier calls to Google. Leave unset on models that reject it.
+ */
+export const MODEL_REASON = Deno.env.get("LLM_MODEL_REASON") ?? "gemini-3.6-flash";
+export const MODEL_FAST = Deno.env.get("LLM_MODEL_FAST") ?? "gemini-3.6-flash";
+export const MODEL_LITE = Deno.env.get("LLM_MODEL_LITE") ?? "gemini-3.1-flash-lite";
+export const REASONING_EFFORT = Deno.env.get("LLM_REASONING_EFFORT") as
+  | "low" | "medium" | "high" | undefined;
+
 export interface LLMConfig {
   url: string;
   apiKey: string;
@@ -111,6 +127,10 @@ export async function callLLM(opts: CallLLMOptions): Promise<LLMResult> {
   // `reasoning` is an OpenRouter/Lovable extension; Google's OpenAI-compat endpoint
   // rejects it with HTTP 400. Only pass it through for the Lovable gateway.
   if (opts.reasoning && providerHint === "lovable") body.reasoning = opts.reasoning;
+  // Google OpenAI-compat accepts `reasoning_effort` on thinking-capable models.
+  if (opts.reasoning && providerHint === "google" && REASONING_EFFORT) {
+    body.reasoning_effort = REASONING_EFFORT;
+  }
   if (opts.tools) body.tools = opts.tools;
   if (opts.tool_choice) body.tool_choice = opts.tool_choice;
 

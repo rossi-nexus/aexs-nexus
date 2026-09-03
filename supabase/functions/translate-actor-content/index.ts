@@ -3,6 +3,7 @@
 // and actor_contacts.title. Idempotent: skips rows that no longer match the Norwegian heuristic.
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.49.4";
+import { MODEL_LITE } from "../_shared/llm-client.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -22,7 +23,7 @@ function looksNorwegian(s: unknown): boolean {
 
 async function translate(text: string, googleApiKey: string): Promise<string> {
   const body = {
-    model: "gemini-3.1-flash-lite",
+    model: MODEL_LITE,
     messages: [
       {
         role: "system",

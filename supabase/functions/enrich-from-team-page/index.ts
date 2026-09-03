@@ -8,6 +8,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.49.4";
 import { safeFetch } from "../_shared/urlGuard.ts";
+import { MODEL_FAST } from "../_shared/llm-client.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -375,7 +376,7 @@ Call submit_contacts with the result.`;
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "gemini-3.6-flash",
+      model: MODEL_FAST,
       messages: [{ role: "user", content: prompt }],
       tools: [TOOL],
       tool_choice: { type: "function", function: { name: "submit_contacts" } },

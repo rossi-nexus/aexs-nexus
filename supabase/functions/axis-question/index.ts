@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.49.4";
-import { callLLM, LLMError } from "../_shared/llm-client.ts";
+import { callLLM, LLMError, MODEL_FAST } from "../_shared/llm-client.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -129,7 +129,7 @@ serve(async (req) => {
     let questions: any[] = [];
     try {
       const result = await callLLM({
-        model: "gemini-3.6-flash",
+        model: MODEL_FAST,
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: userMessage },

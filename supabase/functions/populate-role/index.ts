@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.49.4";
 import { buildOntologyBlock } from "../_shared/ontology-prompt.ts";
+import { MODEL_FAST } from "../_shared/llm-client.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -163,7 +164,7 @@ When you fill proposed_new[], you MUST also include proposed_category_id (UUID o
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "gemini-3.6-flash",
+          model: MODEL_FAST,
           messages: [
             { role: "system", content: SYSTEM_PROMPT + extraSystemSuffix },
             { role: "user", content: userMessage },

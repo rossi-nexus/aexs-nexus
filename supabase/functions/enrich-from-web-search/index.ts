@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.49.4";
+import { MODEL_FAST } from "../_shared/llm-client.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -144,7 +145,7 @@ Respond using the submit_proposals tool.`;
 
 async function callAi(prompt: string, googleApiKey: string) {
   const body = {
-    model: "gemini-3.6-flash",
+    model: MODEL_FAST,
     messages: [{ role: "user", content: prompt }],
     max_tokens: 4096,
     tools: [PROPOSALS_TOOL_SCHEMA],

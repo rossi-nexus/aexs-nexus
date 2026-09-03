@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.49.4";
+import { MODEL_FAST } from "../_shared/llm-client.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -251,7 +252,7 @@ ${(() => {
 
     async function callAI(systemPrompt: string, userMessage: string, toolSchema: any, toolName: string, maxTokens: number) {
       const body: any = {
-        model: "gemini-3.6-flash",
+        model: MODEL_FAST,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userMessage },
@@ -287,7 +288,7 @@ ${(() => {
 
       // Retry with JSON mode
       const body2: any = {
-        model: "gemini-3.6-flash",
+        model: MODEL_FAST,
         messages: [
           { role: "system", content: systemPrompt + "\n\nReturn ONLY valid JSON. No markdown fences." },
           { role: "user", content: userMessage },
