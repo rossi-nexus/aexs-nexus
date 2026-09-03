@@ -19,6 +19,8 @@ export interface ActorAnalysisStatus {
   /** Carried over from Step 3 for display */
   source_actor: ActorCardData;
   processing_time_ms?: number;
+  /** User excluded this actor in Step 4 review. Persisted on lock; skipped by Step 5. */
+  excluded?: boolean;
 }
 
 export interface RoleAnalysisProgress {
@@ -289,10 +291,21 @@ export function useAnalysis({ sessionId }: UseAnalysisProps = { sessionId: null 
     setStatus("complete");
   }, []);
 
-  const lock = useCallback(async () => {
+  const lock = useCallback(async (excludedIds?: Set<string>) => {
+    // Stamp user exclusions onto the persisted output so Step 5 and collection-save respect them.
+    const stamped: RoleAnalysisProgress[] = Array.from(roleProgress.values()).map((r) => ({
+      ...r,
+      actors: r.actors.map((a) => ({
+        ...a,
+        excluded: excludedIds ? excludedIds.has(a.actor_id) : a.excluded ?? false,
+      })),
+    }));
+    if (excludedIds) {
+      setRoleProgress(new Map(stamped.map((r) => [r.role_id, r])));
+    }
     if (sessionId) {
       const now = new Date().toISOString();
-      const lockedOutput = { roleProgress: Array.from(roleProgress.values()) };
+      const lockedOutput = { roleProgress: stamped };
       const { data: existing, error: selErr } = await supabase
         .from("session_step_states")
         .select("id")
@@ -386,6 +399,7 @@ export function useAnalysis({ sessionId }: UseAnalysisProps = { sessionId: null 
     const actors: AnalyzedActor[] = [];
     for (const r of roleProgress.values()) {
       for (const a of r.actors) {
+        if (a.excluded) continue;
         actors.push({
           selectionId: a.actor_id,
           actorId: a.actor_id,

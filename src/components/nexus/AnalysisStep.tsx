@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Loader2, Lock, Unlock, FlaskConical, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import StepContainer from "./StepContainer";
@@ -217,8 +217,19 @@ const AnalysisStep = ({ hook, interpretation, lockedA3Output, step3Locked, onUnl
     else onUnlock();
   };
 
-  // Local exclude state — UI-only, doesn't touch the hook
-  const [excludedIds, setExcludedIds] = useState<Set<string>>(new Set());
+  // Exclude state. Local while reviewing; stamped onto the hook's output on lock (B-02).
+  // Hydrated from persisted `excluded` flags when a locked step is restored.
+  const [excludedIds, setExcludedIds] = useState<Set<string>>(() => {
+    const init = new Set<string>();
+    for (const r of orderedRoles) for (const a of r.actors) if (a.excluded) init.add(a.actor_id);
+    return init;
+  });
+  useEffect(() => {
+    if (status !== "locked") return;
+    const fromState = new Set<string>();
+    for (const r of orderedRoles) for (const a of r.actors) if (a.excluded) fromState.add(a.actor_id);
+    setExcludedIds(fromState);
+  }, [status, orderedRoles]);
   const toggleExclude = (actorId: string) => {
     setExcludedIds((prev) => {
       const next = new Set(prev);
@@ -500,7 +511,7 @@ const AnalysisStep = ({ hook, interpretation, lockedA3Output, step3Locked, onUnl
             )}
           </div>
           <Button
-            onClick={lock}
+            onClick={() => lock(excludedIds)}
             disabled={status === "analyzing" || includedCount < 1}
             className="gap-2"
             title={

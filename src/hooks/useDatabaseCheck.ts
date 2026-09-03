@@ -64,6 +64,7 @@ export function buildCheckInputs(
   for (const role of analyzedRoles) {
     const search = searchById.get(role.role_id);
     for (const a of role.actors) {
+      if (a.excluded) continue;
       if (a.status !== "complete" && a.status !== "skipped") continue;
       const card =
         a.source_actor ||
