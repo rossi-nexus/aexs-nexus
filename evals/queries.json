@@ -1,0 +1,76 @@
+{
+  "version": "2026-09-03",
+  "queries": [
+    {
+      "id": "Q-G1",
+      "name": "Narvik C4ISR wartime",
+      "need": "Persistent C4ISR coverage of the Narvik area, must remain operational in wartime, domestic Norwegian suppliers strongly preferred, single-source dependencies for radar components flagged.",
+      "expect_roles_min": 4,
+      "expect_role_keywords": [["radar", "sensor", "surveillance"], ["command", "C2", "control"], ["communication", "comms", "network"], ["integration", "system"]],
+      "expect_constraints": {"geography.countries": ["NO"], "resilience_posture": "wartime"}
+    },
+    {
+      "id": "Q-G2",
+      "name": "Cyber",
+      "need": "Norwegian critical infrastructure operator needs managed detection and response for OT/ICS networks, on-premise, security-cleared personnel, 24/7.",
+      "expect_roles_min": 3,
+      "expect_role_keywords": [["OT", "ICS", "SCADA", "industrial"], ["detection", "SOC", "monitoring"], ["clearance", "cleared", "security"]]
+    },
+    {
+      "id": "Q-G3",
+      "name": "Maritime",
+      "need": "Coastal patrol capability for the Norwegian coast guard: unmanned surface vessels with EO/IR sensors, 48h endurance, Nordic suppliers.",
+      "expect_roles_min": 3,
+      "expect_role_keywords": [["unmanned", "USV", "vessel"], ["EO", "IR", "sensor", "optical"], ["endurance", "power", "propulsion"]]
+    },
+    {
+      "id": "Q-G4",
+      "name": "Training",
+      "need": "Simulation-based training for joint fires coordination, Norwegian Army, deployable, NATO-interoperable.",
+      "expect_roles_min": 3,
+      "expect_role_keywords": [["simulation", "simulator", "training"], ["fires", "artillery", "joint"], ["interoperab", "NATO", "standard"]]
+    },
+    {
+      "id": "Q-G5",
+      "name": "Space",
+      "need": "Satellite-based maritime domain awareness for the High North: AIS + SAR data fusion, near-real-time, Norwegian ground segment.",
+      "expect_roles_min": 3,
+      "expect_role_keywords": [["satellite", "space", "orbital"], ["AIS", "SAR", "fusion"], ["ground", "segment", "downlink"]]
+    },
+    {
+      "id": "Q-S1",
+      "name": "Narvik C4ISR — serendipity",
+      "need": "Persistent C4ISR coverage of the Narvik area, must remain operational in wartime, domestic Norwegian suppliers strongly preferred, single-source dependencies for radar components flagged.",
+      "expect_wow_categories": ["fisheries acoustic processing", "oil-and-gas subsea comms operators", "space-domain ISR analytics", "maritime SAR helicopter operators", "power-grid SCADA operators with comms hardening"],
+      "noise_categories": ["generic IT / cloud firms", "foreign primes", "civilian commercial drone operators"]
+    },
+    {
+      "id": "Q-S2",
+      "name": "Forsvarsbygg Vestland framework — serendipity",
+      "need": "Forsvarsbygg framework agreements for construction and facility services at defence installations in Vestland, Rogaland and Møre og Romsdal, security clearance required, local mobilisation preferred, 4-year term.",
+      "expect_wow_categories": ["aquaculture infrastructure operators", "hydropower facility maintenance", "Coastal Administration contractors", "arctic airport snow clearing specialists", "subsea cable maintenance"],
+      "noise_categories": ["Oslo facility management", "tier-3 general contractors", "office furniture / catering"]
+    },
+    {
+      "id": "Q-S3",
+      "name": "Nordic commercial drones — control",
+      "need": "Mapping commercial drone manufacturers in the Nordic region for a routine procurement framework.",
+      "expect_max_serendipity": 2,
+      "noise_categories": ["anything — this is the restraint test"]
+    },
+    {
+      "id": "Q-S4",
+      "name": "GPS-denied PNT — serendipity",
+      "need": "Actors capable of providing positioning, navigation and timing resilience in GPS-denied conditions for Norwegian defence operations.",
+      "expect_wow_categories": ["mining survey firms with inertial navigation", "subsea positioning specialists", "observatory / atomic timing operators", "industrial or agricultural autonomous vehicle developers"],
+      "noise_categories": ["generic GPS hardware vendors", "map publishers"]
+    },
+    {
+      "id": "Q-S5",
+      "name": "CI cyber resilience — serendipity",
+      "need": "Identify actors capable of supporting cyber resilience for Norwegian critical infrastructure (energy, telecom, water) in crisis scenarios.",
+      "expect_wow_categories": ["maritime cyber security", "game studios with anti-cheat expertise", "forensic accounting / fraud detection", "power-trading market surveillance"],
+      "noise_categories": ["generic IT consultancies", "hardware vendors"]
+    }
+  ]
+}
