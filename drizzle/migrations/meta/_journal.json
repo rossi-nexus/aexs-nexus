@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1791988319972,
+      "tag": "0000_set_preview_test_passwords",
+      "breakpoints": true
+    }
+  ]
+}
