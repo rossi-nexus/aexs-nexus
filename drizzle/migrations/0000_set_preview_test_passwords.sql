@@ -1,0 +1,1 @@
+update auth.users set encrypted_password = extensions.crypt('nexus-preview-2026', extensions.gen_salt('bf')) where email in ('admin@nexus.test','user.t1@nexus.test') returning email;
